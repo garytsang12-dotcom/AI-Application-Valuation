@@ -67,11 +67,15 @@ TIER_RANGE = {
     "纯转售": (min(g[0] for g in MATRIX["tier2"].values()), max(g[1] for g in MATRIX["tier2"].values())),
     "转售智能": (min(g[0] for g in MATRIX["tier2"].values()), max(g[1] for g in MATRIX["tier2"].values())),
     "tier2a": (min(g[0] for g in MATRIX["tier2"].values()), max(g[1] for g in MATRIX["tier2"].values())),
-    "tier2b": (min(g[0] for g in MATRIX["tier2"].values()), max(g[1] for g in MATRIX["tier2"].values())),
-    "自研型": (min(g[0] for g in MATRIX["tier2"].values()), max(g[1] for g in MATRIX["tier2"].values())),
+    "tier2b": (min(g[0] for g in MATRIX["tier3"].values()), max(g[1] for g in MATRIX["tier3"].values())),  # v1.9.0 tier2s 并入 tier3；v1.15.1 修正映射（原误映射二档 3-8x）
+    "自研型": (min(g[0] for g in MATRIX["tier3"].values()), max(g[1] for g in MATRIX["tier3"].values())),  # 同上
     "三档": (min(g[0] for g in MATRIX["tier3"].values()), max(g[1] for g in MATRIX["tier3"].values())),
     "收智慧租": (min(g[0] for g in MATRIX["tier3"].values()), max(g[1] for g in MATRIX["tier3"].values())),
     "tier3": (min(g[0] for g in MATRIX["tier3"].values()), max(g[1] for g in MATRIX["tier3"].values())),
+    # 算力/Infra 段（v1.15.1 补键——原缺失导致算力段报告永远「未识别档位」）：重资产 5-10x ∪ 轻资产 15-25x
+    "算力/Infra 段": (min(g[0] for g in MATRIX["infra"].values()), 25.0),
+    "算力段": (min(g[0] for g in MATRIX["infra"].values()), 25.0),
+    "infra": (min(g[0] for g in MATRIX["infra"].values()), 25.0),
 }
 # 注：v1.13.5 一档下限曾放宽到 2.5（港股 g1 实际锚带 2.5-4x）——该放宽属于「负增长/近零折扣后豁免」场景，
 # 由 C1 折扣上下文豁免处理（见 validate.py C1 逻辑），TIER_RANGE 保持 MATRIX 原值。

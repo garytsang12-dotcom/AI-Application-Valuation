@@ -5,7 +5,7 @@
 
 ## 二级市场（Wind，S 级官方接口）
 
-> 全部来自 Wind MCP `get_stock_fundamentals`（PS_TTM + 最新报告期营收同比 + 总市值），2026-08-27 时点。刷新命令: `python scripts/refresh_comps.py`
+> 全部来自 Wind MCP `get_stock_fundamentals`（PS_TTM + 最新报告期营收同比 + 总市值），2026-08-27 时点。刷新流程见 anchor-calibration.md §2（Wind 批量拉取市值 + TTM 收入自算）
 
 | 代码 | 名称 | PS_TTM | 增速% | 增速期 | 档位 |
 |---|---|---|---|---|---|
@@ -48,13 +48,13 @@
 | Glean | $7.2B（2025-06 Series）/ 2026-08 再融 $768M | $300M ARR（2026-05 官方） | 24x（旧估值÷新 ARR 保守） | ~+100%（15 个月 $100M→$300M） | Glean 官方 PR 2026-05-28；Sacra 08-11 | A | 三档 | 企业知识图谱飞轮（点击/停留/锚定信号回流）+ 高切换成本——g3 硬锚 |
 | Tempus AI | $10.3B（2026-07） | Q2 2026 $382.5M（+22%） | 7-8x（宏观趋势 2026-08-31） | +22% | Seeking Alpha 2026-07；Tempus Q2 财报 | A | 三档参照 | 医疗数据飞轮（MRD 测试量+500% 攒数据）——但 76% 收入是检验业务拖累，SOTP 数据段后更高；g2 参照非纯锚 |
 | Decagon | $4.5B（2026-02 Forbes） | $30M+ ARR（2026-02 The Information） | ~75-150x | 3 倍/年（$10M→$30M+） | Forbes 2026-02-06；The Information | A | 三档参照 | 客服 agent（Sierra 同类按结果）——g4 偏离活例，估值滞后 ARR 更新 |
-| Fin (Intercom) | $3.6B 收购 | AI 段 $100M | 27-30x | 高 | OnlyCFO SOTP 拆解（X4 已核实，ai-industry-quotes/valuation-verified-data.md） | A | 三档 | SOTP：传统 2-3x + AI 27-30x |
+| Fin (Intercom) | $3.6B 收购 | AI 段 $100M | 27-30x | 高 | OnlyCFO SOTP 拆解（X4 已核实；作者内部核实记录，未随公开版发布） | A | 三档 | SOTP：传统 2-3x + AI 27-30x |
 | ElevenLabs | $11B | $500M | 22x | ~43% 年化 | 官方博客 2026-02-04 / 2026-05-05 | S | 三档 | 官方一手 |
 | Cursor | $60B（SpaceX 全股票收购，2026-06 宣布/08-15 完成） | ~$4B total ARR / ~$2.6B B2B（2026-05，Sacra） | **15x total**（收购价含战略溢价）｜独立估值 Series D $29.3B（2025-11）÷ 最新 ARR ≈ 7-15x | 减速（市占 41%→26%） | Sacra 2026-05；DigitalApplied 2026-06；Reuters/CNBC | A | 二档·自研型 | ⚠️ 收购价含控制权溢价（SpaceX 买数据喂 Grok+人才）——主锚用 15x total，23x B2B 仅辅助；与 OpenRouter 同例标战略溢价 |
 | Suno | $5.4B | $300M | 18x | 100%+ | 官方博客 2026-06-03；TechCrunch/Bloomberg | S/A | 二档自研 | |
 | Liblib/演语 | $2B（B+）/ $3B（IPO 前） | $300M | 6.7x | +3000%（2026-05 同比） | 36氪 2026-06-18 / 08-17；彭博 via 澎湃 08-05 | B | 二档·转售智能 | 无自研模型聚合第三方；增速 3000% 仍锁 6.7x——转售增速期权≈0 铁锚 |
 | OpenRouter | $7.5B（Stripe 收购 2026-08，NYT 口径） | ~$140M annualized | ~53.6x | +2800% | NYT/Axios/Bloomberg | A | 二档·转售智能 | 毛利 70%（不承担模型成本）——战略收购价非公允，仅参考上沿 |
-| Lovable | $13.3B（2026-08 Series C） | $500M（2026-06）→ $600M（8 月底预估） | 26.6x | 2.5 倍/7 个月（$200M→$500M） | TechCrunch/Bloomberg 2026-08-12；ValueAddVC | B | 二档·自研型（强入口） | 跑 Claude/GPT（模型转售）+ 自研生成器/市场=强产品入口资产 A | 二档·转售+入口 | credit 计量（订阅+用量）；产品编排自研+模型转售（内置 G/O）；入口强度=产品编排级；腾讯参投 | 
+| Lovable | $13.3B（2026-08 Series C） | $500M（2026-06）→ $600M（8 月底预估） | 26.6x | 2.5 倍/7 个月（$200M→$500M） | TechCrunch/Bloomberg 2026-08-12；ValueAddVC | B | 二档·自研型（强入口） | 跑 Claude/GPT（模型转售）+ 自研生成器/市场=强产品入口资产；credit 计量（订阅+用量）；产品编排自研+模型转售（内置 G/O）；入口强度=产品编排级；腾讯参投 |
 | Replit | $9B（2026-03 Series D） | ~$525M（2026-04 行业） | 17.1x | 高（2026 年底目标 $1B ARR） | Tech-Insider 2026-08-25；ValueAddVC | B | 二档·转售+入口 | 跑 Claude（模型转售）+平台/IDE 入口（35M 用户）；seat+agent 计量 | 
 | Bolt.new（StackBlitz） | 未披露 2026 | $40M（5 个月） | — | 极快 | ValueAddVC 2026-07-27 | C | 二档·转售+入口 | token 计量（WebContainers 浏览器内）；未披露估值——仅增速参照 |
 | Writesonic | $200-500M（估） | $40-60M（2026E） | ~5-8x | 50-80% | Miracuves 2026-04 | C | 二档·纯转售 | AI 写作工具（GPT 包装+SEO）——纯转售代表；无自研无入口 |
@@ -225,4 +225,4 @@
 | 3916.HK | 联易融 | 3.81x | +54.6% | 增速差 7 倍 PS 只差 1.4 倍——PS 与增速几乎不挂钩实证 |
 | 2216.HK | 迈富时 | 4.88x | +100% | 流量代销剔除后倒算 |
 
-> 完整校准方法论 → anchor-calibration.md；二档重分层详情 → tier2-recalibration-2026-08.md
+> 完整校准方法论 → anchor-calibration.md；二档/三档分层判据 → definitions.md §3

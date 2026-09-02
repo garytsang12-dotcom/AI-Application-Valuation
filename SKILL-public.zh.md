@@ -1,7 +1,7 @@
 ---
 name: ai-app-valuation
 description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
-version: 1.15.0
+version: 1.15.1
 author: open-source contributors
 license: MIT
 platforms: [windows, linux, macos]
@@ -187,7 +187,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 1. **validate.py 三段校验**（必跑，硬错 = 未通过）：R6 URL 真实性 / R7 S 级白名单 / R8 已读标注（查来源行描述指明读了什么，不再要求专门「读取状态」段）/ R9 来源必带真实 URL / C1 估值链一致 / D0 附件零必含 / D0b 收入确认拆分 / **S5 元解释句禁词硬错（MECE/正交/读取状态/免责声明等）+ S6 装饰性 emoji 硬错（🔴⚠️✅❌☑ 语义/表单符号豁免，📖🚀🎨 等装饰禁）+ S7 金额两位小数提示（财报原文可保留，估值判断值须 1 位小数）**
 2. **D0 附件零硬性要求（v1.14.0）**：报告必附「估值矩阵 + 档位定义」附件（读者独立理解）；定档段必须写「收入单位实证（财报原文第 X 页）」+ 时间点/随时间拆分数字
-3. **自检**：`python scripts/test_estimate.py`（引擎 35 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
+3. **自检**：`python scripts/test_estimate.py`（引擎 43 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
 
 ### 数据与隐私边界
 - BP/招股书仅本地处理，不上传外部服务
@@ -221,4 +221,4 @@ When analyzing companies with non-public data (BP, prospectus PDFs, internal not
 2. **De-identify customer names**: report client names only when already public (annual report/10-K); otherwise use 'Customer A in {industry}'
 3. **Mark non-public numbers**: unpublished financials must be marked 'internal, not for distribution'
 4. **No raw sensitive data in reports**: exclude unreleased revenue, internal costs, or personnel data from any published report
-5. **Source state disclosure**: every [N] source carries read-state (📖 read original / 📄 via citation / 🔗 unopened)
+5. **Source state disclosure**: every [N] source states its read-state in words (read original / via citation / unopened) — validate S6 rejects 📖-style emoji in reports

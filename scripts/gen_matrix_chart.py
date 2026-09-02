@@ -18,8 +18,8 @@ import numpy as np
 
 from matrix_data import MATRIX, HK_MATRIX_TIER1, TIER_NAMES
 
-# Windows 中文字体
-matplotlib.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "SimSun", "Arial Unicode MS"]
+# 中文字体：Windows → macOS → Linux 依次兜底（v1.15.1：frontmatter 声明三平台，原列表非 Windows 环境仅 Arial Unicode MS 一项）
+matplotlib.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "SimSun", "PingFang SC", "Hiragino Sans GB", "Arial Unicode MS", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei"]
 matplotlib.rcParams["axes.unicode_minus"] = False
 
 COLS = ["<15%", "15-30%", "30-60%", ">60%"]

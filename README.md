@@ -19,12 +19,15 @@
 
 ```bash
 # 1. 拷贝 skill 到你的 agent skills 目录（Claude Code / Hermes 等）
+#    Agent Skills 规范按文件名 SKILL.md 加载（Claude Code / Codex / Hermes 相同）：
+#    复制后把 SKILL-public.md 或 SKILL-public.zh.md 改名为 SKILL.md；两份 name 相同，只装一份
 # 2. 运行估值引擎（确定性计算）
-python scripts/estimate.py --arr 1000 --tier tier3 --growth 0.8 --quality 8.5
-# → 倍数区间 + 估值区间（如 $15.7-17.5B）
+python scripts/estimate.py --arr 350 --tier tier3 --growth 0.8 --quality 8.5
+# → 倍数区间 + 估值区间（Harvey：ARR $350M × 45-50x ≈ $15.7-17.5B）
 
 # 3. 写完报告跑校验（来源真实性/估值链/置信度三查）
 python scripts/validate.py your_report.md
+#    沙箱/CI 无网络时加 --offline（跳过 URL 可访问性检查）
 ```
 
 ## 四步框架
@@ -94,7 +97,6 @@ python scripts/validate.py your_report.md
 ├── references/
 │   ├── definitions.md    # 档位/死因/质量分语义定义
 │   ├── comps-source.md   # 锚点公司明细（每个倍数可溯源）
-│   ├── comps-chart.md    # 锚带可视化表
 │   └── ...（方法论参考）
 ├── templates/evaluation-template.md  # 报告模板（十章节 + 附件体系）
 ├── assets/valuation-matrix.png       # 估值矩阵图
