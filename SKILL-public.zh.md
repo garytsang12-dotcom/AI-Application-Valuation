@@ -1,8 +1,8 @@
-﻿---
+---
 name: ai-app-valuation
-description: "Use when 主人要给 AI 应用公司估值/打分/看项目。给 AI 应用公司（非模型层、非硬件）做快速估值打分：定档→查生死→质量分→估值区间，输出一页纸评分卡。输入公司名/BP/公开数据，输出「档位+生死+质量分+$估值区间+IC Thesis+DD 清单」。估值计算走确定性脚本（estimate.py），不靠 LLM 心算。触发词：给 XX 估值 / XX 值多少钱 / 给这个 AI 应用公司打分 / 看看这个项目值不值 / 给多少倍 PS / XX 值多少 / 分析 XX 值多少钱。"
+description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
 version: 1.15.0
-author: maliang
+author: open-source contributors
 license: MIT
 platforms: [windows, linux, macos]
 metadata:
@@ -10,17 +10,13 @@ metadata:
     tags: [investing, valuation, ai-app, scoring]
     related_skills: [investment-deep-dive, wind-mcp-skill, gzh-data-rigor]
 ---
-
-# ai-app-valuation — AI 应用公司估值打分
-
-> **定位**：早期投资人看 AI 应用公司的入场前 30 分钟快速估值工具（对齐公众号 X4 四维度：能力→收费→财务→死因）。输入公司名/BP/公开数据 → 输出「定档 + 生死关 + 质量分 + $估值区间」一页纸评分卡。
+*：早期投资人看 AI 应用公司的入场前 30 分钟快速估值工具（对齐公众号 X4 四维度：能力→收费→财务→死因）。输入公司名/BP/公开数据 → 输出「定档 + 生死关 + 质量分 + $估值区间」一页纸评分卡。
 > **与 investment-deep-dive 分工**：本 skill 先跑（快速估值打分），分数高才进 deep-dive 完整尽调。
 > **数据纪律继承**：信源分级 S/A/B/C/D、[N] 可溯源、效验流程——对齐 investment-deep-dive。
 > **📖 查表**：语义定义 → `references/definitions.md`；执行细节/踩坑 → `references/discipline-notes.md`；锚点带源 → `references/comps-source.md`；报告模板 → `templates/evaluation-template.md`。
 
 ## When to Use
 
-- 主人说「给 XX 估值」「XX 值多少钱」「给这个 AI 应用公司打分」「看看这个项目」
 - 目标标的 = AI 应用公司（有收入、卖智能/功能/结果的软件公司）
 - **Not for**：模型层（战略期权逻辑）、AI 硬件/机器人、无收入纯早期（走 investment-deep-dive）、**交易平台/人力外包/硬件转售/AI 驱动资产运营商**（四类框架外 → definitions.md §11）
 
@@ -42,7 +38,6 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 → Step 2 查生死（五死因：1 致命=Pass / 2+黄灯=降档）
 → Step 3 质量分（七指标含爬升检验，每维必填 Key evidence/Main risk）
 → Step 4 estimate.py 估值（矩阵 + 增速插值 + 修正系数）
-→ 偏离分析 → 附录（矩阵/锚点明细/流通盘）→ validate.py 三查 → 归档
 ```
 
 ## Step 1 · 定档（收入在卖什么）
@@ -66,9 +61,8 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 **自研率定档硬判据（极视角事故教训）**：「自研 vs 聚合」不能凭公司叙事猜——上市公司定档前必须实际读招股书/年报的算法构成与收入模式段（S 级）。自研率 <30% = 平台聚合 → 二档（毛利锁死）；>60% = 自研型；介于之间看后训练深度。
 
-**第零档专项：项目制四步拆解（X 番外框架）**：①拆收入结构：重复付费 vs 一次性项目——只有重复部分有资格上倍数，项目部分按利润给 PE ②重复部分按档位定价（席位 5-8x / 用量 3-6x / 结果 10-15x）③分部估值加总 + 转型折溢价 ④看项目沉淀了什么（验收单/产品组件/垂直数据/行业 know-how）。**纯验收 vs 有沉淀量化判据**（重复收入占比 >30% 或 复购率 >50% 或 有明确产品资产 = 有沉淀）→ definitions.md §2。
+**第零档专项：项目制四步拆解**：①拆收入结构（重复 vs 一次性——只有重复部分上倍数）②重复部分按档位定价（席位 5-8x/用量 3-6x/结果 10-15x）③分部加总+转型折溢价 ④看沉淀（验收单/组件/垂直数据/know-how）。**有沉淀量化判据**：重复收入 >30% 或 复购 >50% 或 有产品资产。→ definitions.md §2。
 
-### 🔴 定档三查纪律（v1.14.0 主人硬性要求——业务细拆和定档是工具的灵魂）
 
 **「公司自称的商业模式」≠「会计确认的收入结构」**——范式「Agentic RaaS 实为探索」、迅策「Token 第一股实为项目制向 Token 探索中」、海致「AI 公司实为 97.4% 验收制项目」都是没读原文被自称带偏的教训。**上市公司定档前必须读财报原文完成三查，转述只配当线索，不允许把定档证据丢进 DD Priority**：
 
@@ -85,6 +79,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 - 定档段必须写「收入单位实证（中报原文第 X 页，S 级已读）」+ 时间点/随时间拆分数字
 - 报告必附「估值矩阵 + 档位定义」附件（读者能独立理解——见模板 v1.12.0 附件段）
 - 质量分每指标给 Key evidence + Main risk（禁止只给分数无依据）
+- **未上市（无财报）标的**：三查第 1 查做不了 → 改语言时态判别（「进入/将/更像」= 未来时态自称 = 期权非当期；访谈项目交付词 vs 订阅/按量词交叉）——详见 case-fabarta-2026-09
 
 ## Step 2 · 查生死（五死因，先判生死再看质量）
 
@@ -111,7 +106,6 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 | **爬升检验** | 收入结构是否向高档迁移（token→outcome）——动态斜率 | 真爬（有证据） | 嘴爬（BP 写满十年不动） |
 
 **打分纪律**：每维必须填「Key evidence / Main risk」再打分——禁止只填分数。MECE 整合（v1.15.0）：账本三核查（IER/训练推理配比/现金流质量，判断刻度）+ 质量七指标（0-10 分），两组正交无重复——先扫「在不在资产化」再评「好不好」。
-**⚠️ 爬升检验解读纪律（v1.12.1 迈富时复核，主人裁决）**：**KA 集中度（大客户收入占比高）是增速持续性风险，不是确定性溢价**——KA 依赖 + 低基数递减 → 市场对高增速的可持续性折价是合理的（迈富时 KA 69.1% 实证：+123% 增速但市场只给 4.7x 港股 g4 中位）。写报告时：爬升检验给分前先看增速来源——KA 驱动的「量价齐升」要标注集中度风险；不要因为「大客户粘性强」给增速加分。
 **⚠️ 已知缺口（case-dipu 反馈）**：①盈利拐点未进七指标（Q2 单季盈利对生死关/估值修正力强）②「有沉淀第零档」与「二档纯转售」之间缺中间档——待办，详见 case-dipu。
 
 ## Step 4 · 估值（estimate.py，确定性计算）
@@ -126,12 +120,12 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 | 三档·自研智能（自研 OR 强入口，档内飞轮/切换成本插值） | 5-8x | 8-15x | 15-25x（硬锚） | 15-50x（质量<7 下沿 15-25x / 7-8 中带 25-40x / ≥8 上沿 40-50x——estimate.py 档内双锚独立分层，v1.13.4） |
 | 算力/Infra（--tier infra） | 5-10x | 5-10x | 5-10x | 5-10x（轻资产 --corr asset_light 15-25x） |
 
-> ⚠️ = 推断格（无真实锚点，v1.7 收窄防高估）。**锚点明细（公司/倍数/来源/时点）统一外置 → `references/comps-source.md`**，SKILL.md 不内嵌时点数据。**档内增速插值**：estimate.py 自动（30% 与 60% 不同价，最多 ±区间宽度 25%）。**第零档毛利调节（必叠）**：<40% ×0.7 / 40-55% ×1.0 / 55%+ ×1.3。**市场锚带（v1.9.0）**：默认港股锚带（中国 AI 应用）；仅明确美股公司用美股带（`--market us`）。
+> ⚠️ = 推断格。锚点明细 → `references/comps-source.md`（SKILL 不内嵌时点数据）。增速插值 estimate.py 自动。毛利调节（必叠）：<40% ×0.7 / 40-55% ×1.0 / 55%+ ×1.3。市场锚带：默认港股；明确美股公司用 `--market us`。
 >
-> **一档美股带已 Wind S 级校准（v1.14.2）——区间 3-5x/6-10x/15-25x 全部正确勿动**；校准详情+口径教训 → definitions.md §10（锚点数据纪律）。
-**矩阵是时点数据——每次大版本审计后必须五源同步**：estimate.py MATRIX + SKILL.md 此表 + definitions.md §10 + templates/evaluation-template.md 附件零 + comps-chart.md 快照（2026-09-02 审计抓到 comps-chart 快照仍显示旧版 30-50x 的过期残留——漏同步即漂移）。审计方法/全量锚点 → references/matrix-audit-methodology.md + comps-source.md；Wind S 级审计结论见 Obsidian 估值矩阵逐格审计-2026-09-02.md。
+> 一档美股带 Wind 校准勿动（3-5x/6-10x/15-25x）；口径教训 → definitions.md §10。
+**矩阵唯一权威源（v1.15.0）**：数值只改 `scripts/matrix_data.py`（estimate/validate/chart 全部 import，TIER_RANGE 自动派生）——禁在别处内嵌第二份矩阵（已删过期 MATRIX_REF）。改后跑 test_estimate + test_validate 回归，再同步文档层（definitions §10 + 模板附件零 + comps-chart）。审计方法 → matrix-audit-methodology.md。
 >
-> **⚠️ 矩阵单调性纪律（v1.12 tier2 倒挂教训——主人当场抓出）**：同档位内增速带 g1→g4 的倍数必须**单调不减**——「高增速格比低增速格便宜」是视觉倒挂，主人会直接看出来。v1.7 收窄时 g3 6-10x 未同步、g4 收到 4-8x 造成倒挂；修复=转售档增速期权≈0，g3/g4 对齐 5-8x（Liblib +3000% 也只 6.7x，增速带内无区分）。**每次改矩阵后逐档检查单调性再 commit**；若想表达「该档增速不可信」，用 ⚠️推断格标注，不用数字倒挂。
+> ⚠️ 矩阵单调性纪律：同档 g1→g4 倍数必须单调不减（tier2 倒挂教训）——「高增速格比低增速格便宜」= 视觉倒挂。改矩阵后逐档查单调再 commit；增速不可信用 ⚠️ 标注，不用数字倒挂。
 
 **修正系数**：
 - **同赛道对照法（X4）**：同赛道跨公司对照 > 同公司 SOTP 拆解（Sierra ~100x vs Freshworks 3.95x）。**⚠️ 对照倍数差必须先排除增速变量**（Sierra ARR 一年 5 倍 vs Freshworks +16%——增速差本身解释了大半倍数差；正确归因链：先承认增速差 → 再论证增速差源于商业模式 → 最后才归因商业模式）
@@ -167,24 +161,19 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 进估值前先评估披露充分性，决定四步走到哪（→ definitions.md §7）：充分→正常四步 / 部分→标注推断 / 不足→**降级输出**（只给定档+生死关，不给估值或宽区间）。
 **三态标注铁律（防 AI 脑补）**：每个判断标「已披露可证 / 推断 / 缺失」；缺失维度**禁止给具体数字**，只能写「未披露，需 DD/调研」；推断必须带依据。
 
-### 上市公司信息来源优先级（v1.5.1 主人硬性要求）
 **① 招股书 + 年报（S 级）——必须直接读原文** → **② 券商研报（B 级）** → **③ 财经新闻（C/B 级）**（只做交叉验证，不能作为关键数据唯一来源）。
 - 审计财务数据（净资产/流动比率/负债/毛利率/留存率）必须标招股书 S 级，媒体转述只做交叉验证（海致教训）
 - 招股书下载本地全文检索（pymupdf 读 PDF），关键数字标页码
-- 报告【来源核查清单】必须含「已读招股书/年报」标注
 
-### 来源 URL 铁律（v1.14.3 主人裁决——「研报为什么没有 URL」）
 
 **索引表每条来源必须有真实可访问 URL**——招股书/中报/研报/新闻全部可点开复核，禁止「—」占位。S 级来源给官方链接（hkexnews PDF / Wind / sec.gov）；B 级研报给公开转载链接（证券时报/新浪/发现报告等可访问页）或报告原文。**「来源是转述」不是「不给链接」的理由**——转述也要指向转述来源的页面。validate R9 检查，缺 URL = 硬错。
 
-### 锚点纪律：次新股不可作估值锚（v1.6.1 主人硬性要求）
 **次新股（上市 <12 个月）市场估值含「流通盘稀缺溢价」，不是基本面均衡价——禁止作为估值锚，只能作反例/偏离参考**（→ definitions.md §8）。
 - **收购价 ≠ 公允倍数（v1.8.7 Cursor 案例）**：战略收购价含控制权溢价——收购价只能作上沿参考/偏离活例，不作档位主锚
 - **名单缺公司排查**：被问「某公司怎么不在名单/扫描里」时，先查三个排除原因：①次新股（上市 <12 个月）②框架外（交易平台/人力外包/硬件转售）③流通盘太小（市值 <50 亿剔除锚带样本）。主动说明排除原因 + 给「待满 12 个月后重估」或「次新股反例观察」选项
 - **可用锚点**：充分解禁老股（范式智能 2023-09 / 金蝶 / 中软）+ 一级市场非上市（Harvey / ElevenLabs / Liblib）。**不可用**：未充分解禁次新股（极视角 2027-03-30 / 滴普 2026-10-28 / 群核 2026-10-17 / 科拓 2026-12-26，解禁日历见下）。一级市场锚点单源/未验证 → 标「单源待验证」不参与主带
-- **✅ 已充分解禁可作锚（v1.13.6 主人裁决——按上市规则判定，不按上市时长）**：**聚水潭 06687**（2025-10-21 上市但普通主板 Rule 10.07 六个月锁定 2026-04-21 已届满；发行价 30.60 腰斩至 14.6、抛压已消化；盈利兑现+派息 2.69% 托底；4.5x forward 落一档 g2 带内中位——主人裁决「他也是一个好锚点」）。启示：**判断「次新股能不能作锚」看的是解禁状态（上市规则锁定窗口是否已过），不是上市是否满 12 个月**——普通主板六个月即解禁 vs 18C 十二个月
+- **✅ 已充分解禁可作锚**：**聚水潭 06687**（普通主板 Rule 10.07 六个月 2026-04-21 届满；发行价腰斩抛压消化 + 派息托底；4.5x forward 一档 g2 中位）——判断标准 = **解禁状态（锁定窗口是否已过），非上市满 12 个月**（普通主板 6 个月 vs 18C 12 个月）。
 
-### 上市结构与流通盘分析（v1.6，港股报告必做——2026-09-02 主人要求）
 
 **所有港股公司偏离分析段必含「解禁抛压分析」四要素**（详见 references/listing-float-analysis.md 表 C/C2）：
 1. **基石解禁日**（上市+6 个月，查招股书确认） 2. **Pre-IPO 老股东成本/浮盈**（解禁后任何价格都是获利了结） 3. **自由流通占比**（<15% = 价格未经过抛压检验） 4. **框架价 vs 解禁后均衡**
@@ -206,58 +195,50 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 ### 效验流程（产出报告后必跑——v1.14.0 升级）
 
-1. **打分/评审一律用 skill-scorecard v4.0.0**（七维 70 分制）——打分前必须先 skill_view 加载标准原文再逐维取证，禁止凭记忆发明维度/计分制
-2. **validate.py 三段校验**（必跑，硬错 = 未通过）：R6 URL 真实性 / R7 S 级白名单 / R8 已读标注 / **R9 来源必须带真实 URL（缺 = 硬错，v1.14.3 主人裁决「研报为什么没有 URL」）** + C1 估值链一致 + D0 附件零必含 + D0b 收入确认拆分
 3. **D0 附件零硬性要求（v1.14.0）**：报告必附「估值矩阵 + 档位定义」附件（读者独立理解）；定档段必须写「收入单位实证（财报原文第 X 页）」+ 时间点/随时间拆分数字
 4. **回归**：`python scripts/test.py`（estimate+validate 合并入口）+ `scripts/run_evals.py leakcheck`
 5. **模板版本迁移**：templates 版本号变化 → 跑 check_report_format.py → 逐家重写（v1.13.0 事故教训：模板改版 ≠ 存量报告自动迁移）
 
 ### 数据与隐私边界
 - BP/招股书仅本地处理，不上传外部服务
-- 报告归档双份写（skill references + Obsidian），不涉及第三方敏感信息
 
-**安全操作门槛（v1.14.2 A2 补强）**：以下操作必须先向主人确认再执行——①删除/覆盖报告或 skill 文件（rm/覆写）②修改估值矩阵/锚点库（estimate.py MATRIX / comps-source.md 数值）③发布对外版（tools.py public 后人工润色）④git commit 到 skill 主分支。判断标准：不可逆或影响多人 → 先确认；可逆且单机 → 直接做。
 
 ## 输出格式（详见 templates/evaluation-template.md v1.12.0）
 
 **报告十章节 + 附件体系**（完整模板在 templates/，这里只列骨架）：
-执行摘要（核心结论前置 9 维 + IC Thesis）→ 一公司速览 → 二业绩表现（收入总览+板块拆分+迁移趋势）→ 三商业模式定档（收入单位实证：时点法 vs 期间法占比 + 档位表）→ 四能力栈纵深（六层：基座→结果定价，定性+加厚方向）→ 五财务核查与质量评分（账本定性+账本三核查+质量七指标 0-10 打分）→ 六致命风险筛查（五死因+NDR+生死关）→ 七估值区间（输入+情景表+市场对照，推导链见附件一）→ 八偏离分析（含解禁抛压分析，港股必做）→ 九投资结论（IC Thesis ≤100 字）→ 十下一步（DD Priority+Watch Triggers）
-附件零：估值矩阵+档位定义（**必附**，v1.14.0 主人硬性要求）｜附件一：本报告落位示意｜附件二：锚点依据｜附录：[N] 来源索引
-**报告纪律**：禁装饰性 emoji / 数据只出现一次后续引用 / 金额 1 位小数 / 全程公司汇报货币不转美元 / 账本三核查与质量七指标正交无重复（三核查扫账本、七指标评质量——v1.15.0 MECE 整合）。
-**模板 MECE 纪律（主人 2026-09-02 两轮要求）**：模板章节间禁止同证据跨章打分/定义与推导链双写/清单跨章同源——五类重叠模式 + 第二轮 A–D 已整合（v1.15.0）→ `references/template-mece-audit.md`。改模板结构前先跑该清单自查。
+执行摘要 → 一速览 → 二业绩（拆分+迁移）→ 三定档（时点法+档位表）→ 四能力栈（六层定性）→ 五财务核查+质量七指标 → 六五死因 → 七估值区间 → 八偏离（港股含解禁）→ 九 IC Thesis → 十 DD+Watch
+**报告纪律**：禁装饰性 emoji / 数据只出现一次 / 金额 1 位小数 / 公司汇报货币 / 去元解释句（禁 MECE 分工/读取状态/免责声明——R8 改版查来源行描述）。见 report-concision-checklist.md。
 
 ## 刷新矩阵（估值前建议——锚点时点纪律）
 
-`python scripts/refresh_comps.py`（Wind CLI 拉 23 家二级 + 一级静态；cron 每月 1 日自动跑）→ 更新 references/comps-chart.md。锚点唯一源 = references/comps-source.md。**锚点数据纪律（v1.14.2）**：一律 Wind S 级 TTM PS（市值÷TTM 收入统一口径），web 二手站只作方向参考不作数值。**Wind CLI 调用配方/key 位置 → references/wind-data-access.md**
 
-**体积纪律（v1.14.3，scorecard E4 达标后固化）**：本 SKILL.md 已瘦身至 14.3KB/256 行（≤15KB 且 ≤300 行）——**加新纪律时若超线，把执行细节外置到 references 换指针句，不要删判据/红线**；每轮大改后复测 `len(content)`（中文按字符不算字节）。validate 行为注意：R6 对白名单官方域名（hkexnews/sec.gov/wind.com）不做可访问性检查（官方域反爬默认可信）；C1 tier0 允许上限 3.5x（对齐引擎 tier0 g4）。
+**体积纪律**：SKILL.md ≤15KB ≤300 行——超线时细节外置 references 留指针，不删判据。validate 注意：R6 白名单域免查（反爬）；C1 tier0 上限 3.5x（对齐引擎）。
 
 ## 发布（对外版纪律，v1.12.1）
 
-每次版本迭代后必跑 `python scripts/tools.py public` 生成 release/（SKILL-public.md 英文版 + README）。**对外版纪律**：neutral 无内部专有词（主人/Gary/Obsidian grep 验证 0 命中）；S 级来源白名单保留；**发布前检查 release 版本与 SKILL.md version 一致**（不一致 = 未同步，禁止发布）。
-**GitHub 公开发布包**：`release/github-pkg/`（26 文件，neutral 清洗 + README 数据依赖说明）——构建/重打包/清洗/回归全流程 → `references/github-release-maintenance.md`；上传教程 → Obsidian `05_公众号写作/04_运营与发布/GitHub发布教程-ai-app-valuation.md`。
 
 ## 模板版本迁移清单（v1.13.0 事故修复）
 
-模板版本号变化 ≠ 存量报告自动迁移（v1.11.0 事故：9 家旧报告停留旧格式）。每次 templates/evaluation-template.md 版本变化后：①跑 `python scripts/check_report_format.py` 查存量 ②逐家按新模板重写 ③validate.py 通过后归档。
 
-## 归档（报告产出后必做）
 
-- **正式存档**：`Obsidian\AI-Invest\02_投资研究\AI-App Quick Scan\`
 - **文件名**：`{公司}-{代码}-估值报告.md`
-- **双份写**：skill `references/` 保留 case 锚点；Obsidian 是正式存档
-- **完整版纪律**：批量场景禁止脚本模板批量生成「骨架版」——每家公司必须手写完整版
-- **逐家审模式**：主人逐家审报告时关注三个校准维度——①分析框架有效性 ②语义定义准确性 ③估值矩阵锚点适用性。每份报告展示完必须**主动列出 2-3 个「请您校准」的具体问题**，等主人反馈后再进下一家——校准反馈是框架迭代的燃料
 
 ## Files
 
-- `scripts/estimate.py` — 估值引擎（矩阵+插值+修正+告警，--json 输出）
-- `scripts/validate.py` — 报告校验（R6/R7/R8 来源真实性 + C1 估值链 + D0 附件零）
-- `scripts/test_estimate.py`（35 用例）/ `test_validate.py`（R5 评估集）/ `test.py`（合并回归入口）
-- `scripts/run_evals.py` — 效能评估（tasks/task/leakcheck）
-- `scripts/tools.py` — public/check/chart 统一入口 ｜ `refresh_comps.py` — Wind 刷新锚带 ｜ `gen_matrix_chart.py` — 矩阵图 ｜ `generate_public.py` — 对外版 ｜ `check_report_format.py` — 模板格式检查
-- `references/` — definitions.md（档位语义/矩阵/锚带）｜ comps-source.md（锚点唯一源）｜ comps-chart.md（快照）｜ discipline-notes.md（红线）｜ framework-gaps.md（迭代闭环）｜ case-*.md（14+ 实战案例）｜ listing-float-analysis.md（解禁分析）｜ revenue-recognition-verification.md（定档三查）｜ 等 20+ 支撑文件
-- `templates/evaluation-template.md`（v1.12.0）+ evaluation-template-public.md + 样例
-- `evals/` — evals.json（5 任务）+ workspace/iteration-1（with/without 双跑产物 + baseline）
-- `release/` — SKILL-public.md（英文版）+ README-public.md（发布版）
-- `assets/valuation-matrix.png` — 矩阵图
+- `scripts/estimate.py` — deterministic valuation engine (matrix + growth interpolation + corrections + over-limit warning)
+- `scripts/validate.py` — three-pass report validation (source authenticity / valuation chain / confidence)
+- `references/definitions.md` — semantic definitions (tier / death causes / quality metrics / anchoring rules / **data-desensitization checklist**)
+- `references/comps-source.md` — anchor company detail (every multiple traceable to a real transaction)
+- `references/anchor-calibration.md` — anchor band calibration methodology
+- `templates/evaluation-template.md` — report template (chapters 1-10 + appendix matrix + appendix anchors)
+- `assets/valuation-matrix.png` — matrix chart
+
+## Data & Privacy (data-desensitization checklist)
+
+When analyzing companies with non-public data (BP, prospectus PDFs, internal notes):
+
+1. **Keep local**: BP/prospectus files are processed locally, never uploaded to external services
+2. **De-identify customer names**: report client names only when already public (annual report/10-K); otherwise use 'Customer A in {industry}'
+3. **Mark non-public numbers**: unpublished financials must be marked 'internal, not for distribution'
+4. **No raw sensitive data in reports**: exclude unreleased revenue, internal costs, or personnel data from any published report
+5. **Source state disclosure**: every [N] source carries read-state (📖 read original / 📄 via citation / 🔗 unopened)

@@ -1,8 +1,8 @@
----
+﻿---
 name: ai-app-valuation
 description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
-version: 1.14.3
-author: maliang
+version: 1.15.0
+author: open-source contributors
 license: MIT
 platforms: [windows, linux, macos]
 metadata:
