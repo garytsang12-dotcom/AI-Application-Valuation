@@ -41,11 +41,11 @@ Tier by what the revenue sells: ① function vs model intelligence, ② does COG
 **Tier 0, four steps**: ① split recurring vs one-off (only recurring takes a multiple) ② price recurring: seats 5-8x / usage 3-6x / outcome 10-15x ③ sum segments + transformation premium/discount ④ check sedimentation (acceptance certs / components / vertical data / know-how). Sedimentation quantified: recurring >30% OR repurchase >50% OR product assets (defs §2).
 
 **Self-declared model ≠ accounting structure** — "Agentic RaaS" exploratory, "token-first" IPO still migrating from projects, "AI company" actually 97.4% acceptance-based (海致). Listed: three checks on filing originals; retellings are leads only, never tiering evidence:
-1. **Recognition timing** (revenue-recognition note): point-in-time (acceptance/delivery) >70% → tier 0 even if self-styled SaaS/AI; over-time >50% → tier up to subscription. 海致 1H26: 97.4% point-in-time (p.32) → tier 0.
-2. **Segment split from filing text** (not guidance): 迅策 interim "Token share broke 10%" (p.17) ≠ 20-30% in its profit alert; management still "exploring" migration from project/subscription (p.26) = early.
-3. **Management self-description**: "exploring / early" → value current structure; new business = climb-test option only; platform share <15% → no standalone tier (群核 new app <4%).
+1. **Recognition timing** (revenue-recognition note): point-in-time >70% → tier 0 even if self-styled SaaS; over-time >50% → tier up. (海致 1H26: 97.4% point-in-time → tier 0.)
+2. **Segment split from filing text** (not guidance): 迅策 "Token share broke 10%" (p.17) ≠ 20-30% profit-alert; management "exploring" migration = early.
+3. **Management self-description**: "exploring / early" → value current structure; new business = climb-test option only; platform share <15% → no standalone tier (群核 <4%).
 
-**Every report**: tier section cites revenue-unit evidence + page (S-level) + point/over-time split; each quality metric shows Key evidence + Main risk (no bare scores). Unlisted: tense test ("entering / will" = future = option); cross-check delivery vs subscription wording.
+Worked examples + full procedure → `references/revenue-recognition-verification.md`.
 
 ## Step 2 · Death Check (Five Causes)
 
@@ -150,9 +150,8 @@ High (A/B dual sources) / medium (single-source extrapolation) / low (estimated 
 
 - `scripts/estimate.py` — deterministic valuation engine
 - `scripts/validate.py` — three-pass report validation
-- `references/definitions.md` — semantics (incl. **data-desensitization checklist**)
+- `references/definitions.md` — semantics
 - `references/comps-source.md` — anchors, every multiple traceable
-- `references/anchor-calibration.md` — anchor-band calibration methodology
 - `templates/evaluation-template.md` — report template (chapters 1-10 + appendices)
 - `assets/valuation-matrix.png` — matrix chart
 
