@@ -124,10 +124,7 @@ Assess first — sets how far the four steps go (defs §7): sufficient → full 
 **URL rule**: real clickable URL for every source, no "—": S-level → official links (hkexnews PDF / Wind / SEC.gov); B-level → public reposts or original. "It's a retelling" is no excuse; missing URL = hard error.
 
 **Recent IPOs (listed <12 months)**: price embeds a float-scarcity premium, not equilibrium — forbidden as anchors; counterexample / deviation only (defs §8). **Acquisition price ≠ fair multiple** (control premium; Cursor case): upper-edge reference / deviation example only.
-**Usable anchors**: fully unlocked older shares (范式智能 2023-09 / 金蝶 / 中软) + private (Harvey / ElevenLabs / Liblib). **Unusable**: recent IPOs without full unlock (极视角 2027-03-30 / 滴普 2026-10-28 / 群核 2026-10-17 / 科拓 2026-12-26). Single-source / unverified private anchors → "single-source, pending verification", out of the band.
-**✅ Anchor-usable**: 聚水潭 06687 — Main Board Rule 10.07 six-month lockup expired 2026-04-21; halved issue-price overhang digested + dividend floor; 4.5x forward = tier-1 g2 median. Criterion: **unlock status, not 12 months listed** (Main Board 6 mo vs 18C 12 mo).
-**HK deviation analysis — four lockup/float elements**: ① cornerstone unlock date (listing +6 months) ② Pre-IPO holders' cost / paper gain (any price = profit-taking) ③ free-float share <15% (price untested by selling pressure) ④ framework price vs post-unlock equilibrium.
-**Lockup determination**: the listing chapter decides — Main Board 8.05(1) / 8.05(3) → controlling shareholders 6 months (Rule 10.07); 18C → 12 months (commercialized). **Losses ≠ 18C**: revenue > HK$500M can list under 8.05(3) (海致 / 迅策 evidence). Usable once unlocked: 聚水潭 / 海致 / 迅策 ✅.
+**Anchor-usable requires unlock** (criterion = lockup window passed, not months listed: Main Board Rule 10.07 6 months vs 18C 12 months). Usable: 范式智能/金蝶/中软 + private (Harvey/ElevenLabs/Liblib); 聚水潭 unlocked 2026-04-21 ✅. Unusable: recent IPOs pre-unlock (极视角/滴普/群核/科拓). Full per-company anchor lists + HK lockup/float four-element analysis → `references/comps-source.md` + `references/listing-float-analysis.md` (incl. 8.05(1)/8.05(3) vs 18C determination, cornerstone dates, free-float <15%).
 
 ### Recent-IPO Interim Re-rating
 
