@@ -85,8 +85,7 @@ python scripts/validate.py your_report.md
 ## 目录结构
 
 ```
-├── SKILL-public.md       # 英文版 skill 定义（供 agent 加载）
-├── SKILL-public.zh.md    # 中文版
+├── SKILL-public.zh.md    # skill 定义（中文，供 agent 加载）
 ├── scripts/
 │   ├── estimate.py       # 估值引擎（矩阵 + 插值 + 修正）
 │   ├── validate.py       # 报告三查校验

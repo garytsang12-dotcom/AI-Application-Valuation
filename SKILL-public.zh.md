@@ -1,4 +1,4 @@
----
+﻿---
 name: ai-app-valuation
 description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
 version: 1.15.0
@@ -196,7 +196,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 ### 效验流程（产出报告后必跑——v1.14.0 升级）
 
 3. **D0 附件零硬性要求（v1.14.0）**：报告必附「估值矩阵 + 档位定义」附件（读者独立理解）；定档段必须写「收入单位实证（财报原文第 X 页）」+ 时间点/随时间拆分数字
-4. **回归**：`python scripts/test.py`（estimate+validate 合并入口）+ `scripts/run_evals.py leakcheck`
+4. **自检**：`python scripts/test_estimate.py`（引擎 35 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
 5. **模板版本迁移**：templates 版本号变化 → 跑 check_report_format.py → 逐家重写（v1.13.0 事故教训：模板改版 ≠ 存量报告自动迁移）
 
 ### 数据与隐私边界
