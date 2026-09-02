@@ -1,4 +1,4 @@
-﻿---
+---
 name: ai-app-valuation
 description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
 version: 1.15.0
@@ -13,7 +13,7 @@ metadata:
 *：早期投资人看 AI 应用公司的入场前 30 分钟快速估值工具（对齐公众号 X4 四维度：能力→收费→财务→死因）。输入公司名/BP/公开数据 → 输出「定档 + 生死关 + 质量分 + $估值区间」一页纸评分卡。
 > **与 investment-deep-dive 分工**：本 skill 先跑（快速估值打分），分数高才进 deep-dive 完整尽调。
 > **数据纪律继承**：信源分级 S/A/B/C/D、[N] 可溯源、效验流程——对齐 investment-deep-dive。
-> **📖 查表**：语义定义 → `references/definitions.md`；执行细节/踩坑 → `references/discipline-notes.md`；锚点带源 → `references/comps-source.md`；报告模板 → `templates/evaluation-template.md`。
+> **📖 查表**：语义定义 → `references/definitions.md`；锚点带源 → `references/comps-source.md`；报告模板 → `templates/evaluation-template.md`。
 
 ## When to Use
 
@@ -42,7 +42,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 ## Step 1 · 定档（收入在卖什么）
 
-**判据**：两维——①价值来源（软件功能 vs 模型智能本身）②成本结构（COGS 是否随用量涨）。毛利只做交叉验证。**定档前先实证收入单位**（seat/token/outcome/项目，来源：官网定价页 > 业绩会原话 > 招股书分部 > 年报收入确认附注——细节 → discipline-notes.md B 段）。
+**判据**：两维——①价值来源（软件功能 vs 模型智能本身）②成本结构（COGS 是否随用量涨）。毛利只做交叉验证。**定档前先实证收入单位**（seat/token/outcome/项目，来源：官网定价页 > 业绩会原话 > 招股书分部 > 年报收入确认附注——细节 → references/definitions.md B 段）。
 
 | 档位 | 定义 | 判据 | 毛利交叉验证 |
 |---|---|---|---|
@@ -123,7 +123,6 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 > ⚠️ = 推断格。锚点明细 → `references/comps-source.md`（SKILL 不内嵌时点数据）。增速插值 estimate.py 自动。毛利调节（必叠）：<40% ×0.7 / 40-55% ×1.0 / 55%+ ×1.3。市场锚带：默认港股；明确美股公司用 `--market us`。
 >
 > 一档美股带 Wind 校准勿动（3-5x/6-10x/15-25x）；口径教训 → definitions.md §10。
-**矩阵唯一权威源（v1.15.0）**：数值只改 `scripts/matrix_data.py`（estimate/validate/chart 全部 import，TIER_RANGE 自动派生）——禁在别处内嵌第二份矩阵（已删过期 MATRIX_REF）。改后跑 test_estimate + test_validate 回归，再同步文档层（definitions §10 + 模板附件零 + comps-chart）。审计方法 → matrix-audit-methodology.md。
 >
 > ⚠️ 矩阵单调性纪律：同档 g1→g4 倍数必须单调不减（tier2 倒挂教训）——「高增速格比低增速格便宜」= 视觉倒挂。改矩阵后逐档查单调再 commit；增速不可信用 ⚠️ 标注，不用数字倒挂。
 
@@ -134,7 +133,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 - 模型层单列（一级 P/ARR → comps-source.md §模型层单列，不混入应用矩阵）；**模型层期权纪律**：有自研模型 ≠ 给模型层倍数——需三档迁移可验证证据，否则期权=0 → definitions.md §12
 - 混合型公司（MiniMax 型/金山型）：按收入结构拆段估值
 
-**使用纪律 12 条（标题速查，执行细节 → discipline-notes.md D 段）**：
+**使用纪律 12 条（标题速查，查 definitions.md）**：
 1. 档位决定天花板：二档纯转售增速期权≈0（Liblib +3000% 也只 6.7x）
 2. 增速决定同档内位置：一档最敏感（12%→4x vs 33%→21x）
 3. 质量分调节：≥8 上沿 / 6-8 中带 / <6 下沿
@@ -155,7 +154,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 混合型（订阅+项目+Agentic 等）必须 SOTP 分段估值——整体毛利/增速是混合结果会骗人（第四范式教训：API+860% 只占 12.3%，Agentic「RaaS」自称订阅实为探索）。各段独立定档 × 独立倍数 → 加总。**自称商业模式 ≠ 会计确认结构**——定档前先做三查（见 Step 1）。
 
-## 数据纪律（红线清单，细节 → discipline-notes.md / definitions.md）
+## 数据纪律（红线清单，细节 → references/definitions.md）
 
 ### 披露充分性（Step 0.5）
 进估值前先评估披露充分性，决定四步走到哪（→ definitions.md §7）：充分→正常四步 / 部分→标注推断 / 不足→**降级输出**（只给定档+生死关，不给估值或宽区间）。
@@ -175,14 +174,14 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 - **✅ 已充分解禁可作锚**：**聚水潭 06687**（普通主板 Rule 10.07 六个月 2026-04-21 届满；发行价腰斩抛压消化 + 派息托底；4.5x forward 一档 g2 中位）——判断标准 = **解禁状态（锁定窗口是否已过），非上市满 12 个月**（普通主板 6 个月 vs 18C 12 个月）。
 
 
-**所有港股公司偏离分析段必含「解禁抛压分析」四要素**（详见 references/listing-float-analysis.md 表 C/C2）：
+**所有港股公司偏离分析段必含「解禁抛压分析」四要素**：
 1. **基石解禁日**（上市+6 个月，查招股书确认） 2. **Pre-IPO 老股东成本/浮盈**（解禁后任何价格都是获利了结） 3. **自由流通占比**（<15% = 价格未经过抛压检验） 4. **框架价 vs 解禁后均衡**
 **判定纪律（v1.13.6 修正）**：上市章节决定锁定期——普通主板盈利测试 8.05(1) 或市值/收入测试 8.05(3) = 控股股东 6 个月（Rule 10.07）；18C 特专科技 = 12 个月（已商业化）。**连年亏损 ≠ 18C**——收入 >5 亿港元可走 8.05(3)（海致/迅策实证），必须读招股书「申請於聯交所上市」段判定，禁止按亏损猜章节。锚点资格按解禁状态判定（已充分解禁可作锚：聚水潭/海致/迅策 ✅）。
 
 ### 次新股中报重估触发点（v1.9.1）
-次新股（上市 <12 个月）的首份中报/年报 = 估值重置时点：①增速口径必须更新（招股书数据 → 1H26 实际 + 全年指引）②AI 业务占比是重估第一变量（爬升检验从嘴爬变真爬）③盈利拐点普遍出现 → 生死关缓解 ④但倍数上限硬锚没动（自研率/流通盘/AI 含量）⑤市场已重新定价——偏离分析前必须先拉最新市值。6 家名单与 1H26 数据 → case-2026-hk-ai-ipo.md §七
+次新股（上市 <12 个月）的首份中报/年报 = 估值重置时点：①增速口径必须更新（招股书数据 → 1H26 实际 + 全年指引）②AI 业务占比是重估第一变量（爬升检验从嘴爬变真爬）③盈利拐点普遍出现 → 生死关缓解 ④但倍数上限硬锚没动（自研率/流通盘/AI 含量）⑤市场已重新定价——偏离分析前必须先拉最新市值。名单见数据纪律段
 
-### 关键数据门禁 / 口径坑（细节 → discipline-notes.md）
+### 关键数据门禁 / 口径坑（细节 → references/definitions.md）
 
 - 估值/ARR/增速/倍数 ≥2 个 A/B 级独立来源，否则「单源待验证」
 - 4 要素口径（时间/单位/计算/市场）；ARR 必须写口径（total/B2B/agentic）
@@ -195,9 +194,9 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 ### 效验流程（产出报告后必跑——v1.14.0 升级）
 
-3. **D0 附件零硬性要求（v1.14.0）**：报告必附「估值矩阵 + 档位定义」附件（读者独立理解）；定档段必须写「收入单位实证（财报原文第 X 页）」+ 时间点/随时间拆分数字
-4. **自检**：`python scripts/test_estimate.py`（引擎 35 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
-5. **模板版本迁移**：templates 版本号变化 → 跑 check_report_format.py → 逐家重写（v1.13.0 事故教训：模板改版 ≠ 存量报告自动迁移）
+1. **validate.py 三段校验**（必跑，硬错 = 未通过）：R6 URL 真实性 / R7 S 级白名单 / R8 已读标注（查来源行描述指明读了什么，不再要求专门「读取状态」段）/ R9 来源必带真实 URL / C1 估值链一致 / D0 附件零必含 / D0b 收入确认拆分 / **S5 元解释句禁词硬错（MECE/正交/读取状态/免责声明等）+ S6 装饰性 emoji 硬错（🔴⚠️✅❌☑ 语义/表单符号豁免，📖🚀🎨 等装饰禁）+ S7 金额两位小数提示（财报原文可保留，估值判断值须 1 位小数）**
+2. **D0 附件零硬性要求（v1.14.0）**：报告必附「估值矩阵 + 档位定义」附件（读者独立理解）；定档段必须写「收入单位实证（财报原文第 X 页）」+ 时间点/随时间拆分数字
+3. **自检**：`python scripts/test_estimate.py`（引擎 35 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
 
 ### 数据与隐私边界
 - BP/招股书仅本地处理，不上传外部服务
@@ -207,21 +206,11 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 **报告十章节 + 附件体系**（完整模板在 templates/，这里只列骨架）：
 执行摘要 → 一速览 → 二业绩（拆分+迁移）→ 三定档（时点法+档位表）→ 四能力栈（六层定性）→ 五财务核查+质量七指标 → 六五死因 → 七估值区间 → 八偏离（港股含解禁）→ 九 IC Thesis → 十 DD+Watch
-**报告纪律**：禁装饰性 emoji / 数据只出现一次 / 金额 1 位小数 / 公司汇报货币 / 去元解释句（禁 MECE 分工/读取状态/免责声明——R8 改版查来源行描述）。见 report-concision-checklist.md。
-
-## 刷新矩阵（估值前建议——锚点时点纪律）
-
-
-**体积纪律**：SKILL.md ≤15KB ≤300 行——超线时细节外置 references 留指针，不删判据。validate 注意：R6 白名单域免查（反爬）；C1 tier0 上限 3.5x（对齐引擎）。
-
-## 发布（对外版纪律，v1.12.1）
-
-
-## 模板版本迁移清单（v1.13.0 事故修复）
+**报告纪律**：禁装饰性 emoji / 数据只出现一次 / 金额 1 位小数 / 公司汇报货币 / 去元解释句（禁 MECE 分工/读取状态/免责声明——R8 改版查来源行描述）。
 
 
 
-- **文件名**：`{公司}-{代码}-估值报告.md`
+
 
 ## Files
 
