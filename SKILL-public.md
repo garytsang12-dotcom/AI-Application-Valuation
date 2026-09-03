@@ -1,7 +1,7 @@
 ---
 name: ai-app-valuation
 description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
-version: 1.15.0
+version: 1.15.1
 author: open-source contributors
 license: MIT
 platforms: [windows, linux, macos]
@@ -163,4 +163,4 @@ With non-public data (BP, prospectus PDFs, internal notes):
 2. **De-identify clients**: only public names (annual report / 10-K); else 'Customer A in {industry}'
 3. **Mark non-public numbers**: unpublished financials → 'internal, not for distribution'
 4. **No raw sensitive data in reports**: no unreleased revenue, internal costs, or personnel data
-5. **Source state disclosure**: every [N] source carries read-state (📖 read original / 📄 via citation / 🔗 unopened)
+5. **Source state disclosure**: every [N] source states its read-state in words (read original / via citation / unopened) — validate S6 rejects 📖-style emoji in reports

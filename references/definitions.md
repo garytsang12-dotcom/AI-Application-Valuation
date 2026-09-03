@@ -385,7 +385,7 @@ AI 公司 NDR 会被用量虚增——客户多跑任务，账单涨、推理成
 
 
 ### 港股一档锚带（v1.7.12 框架要求——市值>50亿全谱系实测，2026-08-31）
-**⚠️ 锚点数据纪律（v1.14.2 Wind 教训）**：估值锚校准一律用 **Wind S 级 TTM PS**（市值 ÷ TTM 收入，统一口径）；web 二手数据站（financecharts/companiesmarketcap/TIKR 等）各自用 EV/forward/NTM 口径，数值差异可达 20-50%（2026-09-02 实证：Atlassian web 报 5.9x 实为 Wind 7.2x、Datadog web 报 11.4x 实为 21.9x、Workday web 报 5.28x 实为 4.7x——NTM/forward 与 TTM 混用导致误判「SaaS 压缩」）——web 只作方向参考不作校准数值。刷新锚带跑 refresh_comps.py（Wind CLI）或手拉 Wind get_stock_fundamentals 市值+TTM收入自算。
+**⚠️ 锚点数据纪律（v1.14.2 Wind 教训）**：估值锚校准一律用 **Wind S 级 TTM PS**（市值 ÷ TTM 收入，统一口径）；web 二手数据站（financecharts/companiesmarketcap/TIKR 等）各自用 EV/forward/NTM 口径，数值差异可达 20-50%（2026-09-02 实证：Atlassian web 报 5.9x 实为 Wind 7.2x、Datadog web 报 11.4x 实为 21.9x、Workday web 报 5.28x 实为 4.7x——NTM/forward 与 TTM 混用导致误判「SaaS 压缩」）——web 只作方向参考不作校准数值。刷新锚带：用 Wind CLI get_stock_fundamentals 市值+TTM收入重拉后更新（内部自动化脚本不入公开发布包）。
 
 **核心发现：港股 SaaS 的 PS 与增速几乎不挂钩**——定价变量是确定性（盈利/现金流/粘性）不是增速：
 | 公司 | PS | 增速 | 档 |

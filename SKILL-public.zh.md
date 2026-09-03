@@ -1,7 +1,7 @@
 ---
 name: ai-app-valuation
 description: "Valuation scoring for AI application companies (non-model-layer, non-hardware). Four steps: tier → moat check → quality score → valuation range. Deterministic arithmetic via estimate.py. Triggers: 'value this AI company', 'how much is XX worth', 'score this AI app startup'."
-version: 1.15.0
+version: 1.15.1
 author: open-source contributors
 license: MIT
 platforms: [windows, linux, macos]
@@ -77,9 +77,9 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 **配套（写入每份报告）**：
 - 定档段必须写「收入单位实证（中报原文第 X 页，S 级已读）」+ 时间点/随时间拆分数字
-- 报告必附「估值矩阵 + 档位定义」附件（读者能独立理解——见模板 v1.12.0 附件段）
+- 报告必附「估值矩阵 + 档位定义」附件（读者能独立理解——见模板 v1.15.1 附件段）
 - 质量分每指标给 Key evidence + Main risk（禁止只给分数无依据）
-- **未上市（无财报）标的**：三查第 1 查做不了 → 改语言时态判别（「进入/将/更像」= 未来时态自称 = 期权非当期；访谈项目交付词 vs 订阅/按量词交叉）——详见 case-fabarta-2026-09
+- **未上市（无财报）标的**：三查第 1 查做不了 → 改语言时态判别（「进入/将/更像」= 未来时态自称 = 期权非当期；访谈项目交付词 vs 订阅/按量词交叉）。
 
 ## Step 2 · 查生死（五死因，先判生死再看质量）
 
@@ -106,7 +106,7 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 | **爬升检验** | 收入结构是否向高档迁移（token→outcome）——动态斜率 | 真爬（有证据） | 嘴爬（BP 写满十年不动） |
 
 **打分纪律**：每维必须填「Key evidence / Main risk」再打分——禁止只填分数。MECE 整合（v1.15.0）：账本三核查（IER/训练推理配比/现金流质量，判断刻度）+ 质量七指标（0-10 分），两组正交无重复——先扫「在不在资产化」再评「好不好」。
-**⚠️ 已知缺口（case-dipu 反馈）**：①盈利拐点未进七指标（Q2 单季盈利对生死关/估值修正力强）②「有沉淀第零档」与「二档纯转售」之间缺中间档——待办，详见 case-dipu。
+**⚠️ 已知缺口**：①盈利拐点未进七指标（Q2 单季盈利对生死关/估值修正力强）②「有沉淀第零档」与「二档纯转售」之间缺中间档——待办。
 
 ## Step 4 · 估值（estimate.py，确定性计算）
 
@@ -187,13 +187,13 @@ python scripts/estimate.py --arr 100 --tier tier1 --growth 0.4 --quality 6.5
 
 1. **validate.py 三段校验**（必跑，硬错 = 未通过）：R6 URL 真实性 / R7 S 级白名单 / R8 已读标注（查来源行描述指明读了什么，不再要求专门「读取状态」段）/ R9 来源必带真实 URL / C1 估值链一致 / D0 附件零必含 / D0b 收入确认拆分 / **S5 元解释句禁词硬错（MECE/正交/读取状态/免责声明等）+ S6 装饰性 emoji 硬错（🔴⚠️✅❌☑ 语义/表单符号豁免，📖🚀🎨 等装饰禁）+ S7 金额两位小数提示（财报原文可保留，估值判断值须 1 位小数）**
 2. **D0 附件零硬性要求（v1.14.0）**：报告必附「估值矩阵 + 档位定义」附件（读者独立理解）；定档段必须写「收入单位实证（财报原文第 X 页）」+ 时间点/随时间拆分数字
-3. **自检**：`python scripts/test_estimate.py`（引擎 35 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
+3. **自检**：`python scripts/test_estimate.py`（引擎 43 用例）+ `python scripts/test_validate.py`（校验器基准）——全过 = 安装完好
 
 ### 数据与隐私边界
 - BP/招股书仅本地处理，不上传外部服务
 
 
-## 输出格式（详见 templates/evaluation-template.md v1.12.0）
+## 输出格式（详见 templates/evaluation-template.md v1.15.1）
 
 **报告十章节 + 附件体系**（完整模板在 templates/，这里只列骨架）：
 执行摘要 → 一速览 → 二业绩（拆分+迁移）→ 三定档（时点法+档位表）→ 四能力栈（六层定性）→ 五财务核查+质量七指标 → 六五死因 → 七估值区间 → 八偏离（港股含解禁）→ 九 IC Thesis → 十 DD+Watch

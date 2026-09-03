@@ -2,6 +2,20 @@
 
 版本纪律：version 字段 + 本文件同步更新。
 
+## v1.15.1（2026-09-03）—— 次新股解禁日历数据修正 + 断链清理
+
+**解禁数据修正（滴普无基石 / 海致基石分批）**
+- 滴普科技 01384：**无基石**——招股书无基石投资者章节（hket 2025-10-23「不設基石投資者」实证），删除原「基石已解禁 2026-04-28」错误表述（listing-float 表 C2 / comps-source 次新股表）
+- 海致科技 02706：4 家基石锁定期**不统一**（etnet/aastocks 配发结果实证）——Infini/Mega Prime 6 个月 2026-08-13 已解禁；JINGSHENG HENGXING 9 个月 → 2026-11-13；JSC Intl Investment Fund SPC 11 个月 → 2027-01-13。原「基石+控股股东 2026-08-13 已解禁 / 已充分解禁」表述错误 → 改 ⚠️「控股股东已解禁，基石 2/4 未到——锚点资格待基石全解后重估」
+- 迅策 03317 复核无误（基石 641 万股统一 6 个月，2026-06-29 已全解禁）——补实证注明
+- 方法论新增：**基石分批锁定期特例**——锚点判定以控股股东锁定窗口为准，但基石锁定期 >6 个月未全解时「已充分解禁」不成立（海致实证）
+
+**断链清理**
+- README 目录树 comps-chart.md → 改 listing-float-analysis.md（包内实际文件）
+- comps-source.md：refresh_comps.py 命令（未随包发布）→ 改「Wind MCP 重拉」；内部路径残留 → 删除；tier2-recalibration-2026-08.md（未入包）→ 改指 anchor-calibration.md
+- definitions.md：refresh_comps.py 引用 → 改 Wind CLI 描述
+- SKILL-public.zh.md：case-fabarta-2026-09 / case-dipu 内部案例指针（未发布）→ 删除
+
 ## v1.15.0（2026-09-02）—— MECE 整合 + 纪律机器化 + 单一权威源
 
 **模板 MECE 整合（消除跨章重复）**
