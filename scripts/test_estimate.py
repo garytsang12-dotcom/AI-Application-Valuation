@@ -42,11 +42,14 @@ failures = []
 
 def run_estimate(tier, growth, quality, market="hk", corr=None):
     cmd = [sys.executable, str(SCRIPT), "--arr", "100", "--tier", tier,
-           "--growth", str(growth), "--quality", str(quality), "--json"]
+           "--quality", str(quality), "--json"]
+    if growth is not None:  # v1.15.1：允许缺省 --growth（增速未知）
+        cmd += ["--growth", str(growth)]
     if market:
         cmd += ["--market", market]
-    if corr:
-        cmd += ["--corr", corr]
+    if corr:  # 单个字符串或列表（v1.15.1：多修正系数顺序测试）
+        for c in ([corr] if isinstance(corr, str) else corr):
+            cmd += ["--corr", c]
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     if r.returncode != 0:
         return None
@@ -172,6 +175,58 @@ def main():
         check("质量分层单调（5<7<8.5）", m5 < m7 < m85, f"{m5}<{m7}<{m85}")
     else:
         check("tier3 g4 质量分层", False, "调用失败")
+
+    # ---- 9. 缺省 --growth 不崩（v1.15.1 修复：原实现 args.growth*100 TypeError）----
+    print("\n[9] 缺省 --growth（增速未知按 g1 保守）")
+    out = run_estimate("tier1", None, 6.5)
+    check("无 --growth 正常退出", out is not None, "调用失败（v1.15.0 在此 TypeError）")
+    if out:
+        check("增速未知落 g1 且输入标未知", any("g1" in s for s in out["推导"]) and str(out["输入"]["增速"]).startswith("未知"),
+              f"增速={out['输入']['增速']} 推导={out['推导'][:2]}")
+
+    # ---- 10. 修正系数顺序无关（v1.15.1）----
+    print("\n[10] 修正系数顺序无关（founder80 × vertical1.5 双序）")
+    a = run_estimate("tier3", 0.8, 8.5, corr=["founder80", "vertical1.5"])
+    b = run_estimate("tier3", 0.8, 8.5, corr=["vertical1.5", "founder80"])
+    if a and b:
+        check("双序倍数一致", a["倍数"] == b["倍数"], f"{a['倍数']} vs {b['倍数']}")
+        check("founder80 封顶 80x 且低≤高", a["倍数"]["高"] == 80.0 and a["倍数"]["低"] <= a["倍数"]["高"], f"{a['倍数']}")
+    else:
+        check("双序调用", False, "调用失败")
+    c = run_estimate("tier3", 0.8, 8.5, corr=["ai_narrative", "vertical2.0", "founder80"])
+    if c:
+        check("三系数叠加后低≤高（原 120-80x 倒挂）", c["倍数"]["低"] <= c["倍数"]["高"], f"{c['倍数']}")
+
+    # ---- 11. asset_light 不再必触发超限告警（v1.15.1）----
+    print("\n[11] asset_light 超限阈值按 25x 计")
+    out = run_estimate("infra", 0.45, 6.5, corr="asset_light")
+    if out:
+        check("asset_light 无超限告警", not out["告警"], f"告警={out['告警']}")
+        check("asset_light 仍为 15-25x", out["倍数"]["低"] == 15.0 and out["倍数"]["高"] == 25.0, f"{out['倍数']}")
+    else:
+        check("asset_light 调用", False, "调用失败")
+
+    # ---- 12. 质量分越界拒绝 ----
+    print("\n[12] 质量分越界（15）应拒绝")
+    check("quality=15 非零退出", run_estimate("tier1", 0.2, 15.0) is None, "越界质量分被接受")
+
+    # ---- 13. asset_light 仅算力段有效 ----
+    print("\n[13] asset_light 对非算力段忽略")
+    plain = run_estimate("tier0", 0.45, 6.5)
+    al = run_estimate("tier0", 0.45, 6.5, corr="asset_light")
+    if plain and al:
+        check("tier0 + asset_light 结果与无修正一致", al["倍数"] == plain["倍数"], f"{al['倍数']} vs {plain['倍数']}")
+    else:
+        check("tier0 asset_light 调用", False, "调用失败")
+
+    # ---- 14. founder80 封顶不掩盖叠加过度（按封顶前峰值判超限）----
+    print("\n[14] ai_narrative + vertical2.0 + founder80 仍触发超限告警")
+    out = run_estimate("tier3", 0.8, 8.5, corr=["ai_narrative", "vertical2.0", "founder80"])
+    if out:
+        check("三系数叠加触发超限告警", bool(out["告警"]), "封顶后无告警——叠加过度被掩盖")
+        check("输出仍封顶 80x", out["倍数"]["高"] == 80.0, f"{out['倍数']}")
+    else:
+        check("三系数调用", False, "调用失败")
 
     # ---- 汇总 ----
     print("\n" + "=" * 60)

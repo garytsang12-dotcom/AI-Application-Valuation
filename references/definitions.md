@@ -1,7 +1,7 @@
-﻿# definitions.md — ai-app-valuation 语义定义库（查表项）
+﻿﻿# definitions.md — ai-app-valuation 语义定义库（查表项）
 
 > 用途：SKILL.md 的语义定义拆分件。SKILL.md 只留流程骨架，本文件是「查表项」——定档/生死/质量分判断时按需查阅，不随每次调用全量加载。
-> 版本：v1.7.14（2026-08-31：第四类框架外——AI 驱动资产运营商（美克生案例）；电力交易 AI 赛道锚点（国能日新 §13）；赋能型 AI vs 产品型 AI 判据）
+> 版本：随 SKILL 同步 v1.15.1（各节内 vN 标记为该节最近修订版本）；v1.7.14（2026-08-31：第四类框架外——AI 驱动资产运营商（美克生案例）；电力交易 AI 赛道锚点（国能日新 §13）；赋能型 AI vs 产品型 AI 判据）
 
 ## §1 定档核心判据
 
@@ -92,8 +92,8 @@
 | 纯转售·无自研无入口（g1-g3） | Writesonic ~5-8x / Copy.ai ~12x⚠️ | 3-8x | 二档·纯转售（tier2a） | 单点功能风险锁死 |
 | 纯转售·无自研无入口（g4 >60%） | **Liblib 6.7x（+3000% 仍锁死——增速期权≈0）** | 4-8x | 二档·纯转售（tier2a） | 增速 3000% 也只值 6.7x——纯转售增速溢价不存在（v1.7.13 实证校准：Liblib 增速属 g4 非 g1） |
 | 转售+入口/生态（有产品层/入口，模型转售） | Cursor **15x total**（收购价含战略溢价，v1.8.7 修正）/ ElevenLabs 22x / Suno 18x / Replit 17.1x / Lovable 26.6x | 15-35x（2026-09-01 merge：原 2c 并入自研型，早期数据全拿掉） | **三档·自研智能（tier3，v1.9.0 merge 原 tier2s+tier3——自研 vs 收智慧租不硬分档，档内双判据插值）** | 入口强度决定倍数：IDE>路由网络>产品编排>平台；OpenRouter 战略溢价 ⚠️；Cursor 收购价含溢价（§8） |
-| 自研型·按量（自研模型+API） | ElevenLabs 22-35x / Suno 18x | 15-35x | 二档·自研型（tier2b） | 自研是定价核心 |
-| 自研型·按量（编码） | Cursor 15x total / 23x B2B（当前）/ 29x forward | 15-35x | 二档·自研型（tier2b） | 双口径必标 |
+| 自研型·按量（自研模型+API） | ElevenLabs 22-35x / Suno 18x | 15-35x | 三档·自研智能（原 tier2b，v1.9.0 并入） | 自研是定价核心 |
+| 自研型·按量（编码） | Cursor 15x total / 23x B2B（当前）/ 29x forward | 15-35x | 三档·自研智能（原 tier2b，v1.9.0 并入） | 双口径必标 |
 | 模型层 API | OpenAI ~35x / **Anthropic 21-31x（2026-08 更新）/ Mistral 57x（在谈）** | 战略期权 | 单列不入应用矩阵；**期权需三档迁移证据（§12）** | — |
 
 **三档 g3/g4 边界（v1.14.0 审计加注）**：g3 上沿 ≈ g4 下沿——Glean 24x(+89%) 增速属 g4 但倍数落 g3 上沿；质量 7-8 中带公司跨档参考（增速 60%+ 但质量 7 给 25-30x = g3 上沿 + 少量；只有质量 ≥8 才进 40-50x）。增速 g4 + 质量 <7 = 自研无飞轮（Cursor 15x 档）——**不是所有 g4 增速都配得上三档上沿**
@@ -385,7 +385,7 @@ AI 公司 NDR 会被用量虚增——客户多跑任务，账单涨、推理成
 
 
 ### 港股一档锚带（v1.7.12 框架要求——市值>50亿全谱系实测，2026-08-31）
-**⚠️ 锚点数据纪律（v1.14.2 Wind 教训）**：估值锚校准一律用 **Wind S 级 TTM PS**（市值 ÷ TTM 收入，统一口径）；web 二手数据站（financecharts/companiesmarketcap/TIKR 等）各自用 EV/forward/NTM 口径，数值差异可达 20-50%（2026-09-02 实证：Atlassian web 报 5.9x 实为 Wind 7.2x、Datadog web 报 11.4x 实为 21.9x、Workday web 报 5.28x 实为 4.7x——NTM/forward 与 TTM 混用导致误判「SaaS 压缩」）——web 只作方向参考不作校准数值。刷新锚带：用 Wind CLI get_stock_fundamentals 市值+TTM收入重拉后更新（内部自动化脚本不入公开发布包）。
+**⚠️ 锚点数据纪律（v1.14.2 Wind 教训）**：估值锚校准一律用 **Wind S 级 TTM PS**（市值 ÷ TTM 收入，统一口径）；web 二手数据站（financecharts/companiesmarketcap/TIKR 等）各自用 EV/forward/NTM 口径，数值差异可达 20-50%（2026-09-02 实证：Atlassian web 报 5.9x 实为 Wind 7.2x、Datadog web 报 11.4x 实为 21.9x、Workday web 报 5.28x 实为 4.7x——NTM/forward 与 TTM 混用导致误判「SaaS 压缩」）——web 只作方向参考不作校准数值。刷新锚带按 anchor-calibration.md §2 用 Wind get_stock_fundamentals 拉市值+TTM收入自算。
 
 **核心发现：港股 SaaS 的 PS 与增速几乎不挂钩**——定价变量是确定性（盈利/现金流/粘性）不是增速：
 | 公司 | PS | 增速 | 档 |

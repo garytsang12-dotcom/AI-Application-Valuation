@@ -10,7 +10,7 @@ estimate.py — AI 应用公司估值引擎（确定性计算，无 LLM）
     输入判断性字段（档位/增速/质量分/修正），输出估值区间 + 完整推导。
     所有算术由本脚本完成，LLM 只负责填输入和解释——防算数幻觉。
 
-矩阵数据（2026-08 核验版，随 refresh_comps.py 刷新同步）:
+矩阵数据（2026-08 核验版，刷新流程见 references/anchor-calibration.md §2）:
     档位 × 增速 → PS 区间
     修正系数: 垂直赛道 ×1.5-2 / 创始人溢价(上沿 80x) / 中国溢价等
 
@@ -81,7 +81,8 @@ def apply_corr(lo, hi, corr_key):
     if corr_key == "vertical2.0":
         return lo * 2.0, hi * 2.0, "垂直赛道溢价 ×2.0"
     if corr_key == "founder80":
-        return lo, 80.0, "创始人/战略溢价：上限提到 80x（Sierra 级，极少数）"
+        # v1.15.1：SKILL「上沿 80x」= 上限封顶 80x，下限不高于上限（原实现在乘法系数之后应用会出现下限>上限）
+        return min(lo, 80.0), 80.0, "创始人/战略溢价：上限封顶 80x（Sierra 级，极少数）"
     if corr_key == "china_sub":
         return lo * 1.5, hi * 1.5, "中国订阅稀缺溢价 ×1.5（金山办公类）"
     if corr_key == "ai_narrative":
@@ -110,6 +111,9 @@ def main():
     ap.add_argument("--market", choices=["us", "hk"], default="hk", help="市场锚带：默认 hk（中国 AI 应用默认港股锚带，v1.9.0）；仅明确美股公司传 us")
     ap.add_argument("--json", action="store_true", help="输出 JSON")
     args = ap.parse_args()
+    if not (0.0 <= args.quality <= 10.0):
+        ap.error(f"--quality 必须在 0-10 之间（收到 {args.quality}）")
+    growth_txt = "未知（按 g1 保守）" if args.growth is None else f"{args.growth*100:.0f}%"
 
     band = growth_band(args.growth)
     cell = MATRIX[args.tier].get(band)
@@ -133,7 +137,7 @@ def main():
         market_note = f"⚠️ 港股 {TIER_NAMES[args.tier]} 待实测（仅 tier1 有 8 家锚），暂用美股带"
     base_lo, base_hi = lo, hi
     steps = []
-    steps.append(f"增速 {args.growth*100:.0f}% → 增速档 {band}（<15/15-30/30-60/>60）")
+    steps.append(f"增速 {growth_txt} → 增速档 {band}（<15/15-30/30-60/>60）")
     steps.append(f"矩阵格子: {TIER_NAMES[args.tier]} × {band} = {lo:.1f}-{hi:.1f}x")
     if market_note:
         steps.append(market_note)
@@ -142,13 +146,15 @@ def main():
     # ⚠️ infra 段跳过（v1.10.0）：算力段增速期权≈0——重资产公用事业化定价，折旧吃利润，增速不转化为倍数（优刻得 +117% 只给 4.45x）
     # ⚠️ tier3 g4 宽格跳过（v1.13.4 bug 修复）：15-50x 跨度本身靠质量分定位（质量<7 下沿 15-25x / ≥8 上沿 40-50x），
     #    增速已含在跨度定价内（Harvey 80% 增速 → 44x 上沿无需再 +8.75x 插值）；叠加插值会撑爆区间（15-50 → 23.8-58.8）
-    if args.growth is not None and args.tier != "infra" and not (args.tier == "tier3" and band == "g4"):
-        lo, hi, note = growth_interpolate(args.growth, band, lo, hi)
-        steps.append(note)
-    elif args.tier == "infra":
+    if args.tier == "infra":
         steps.append("infra 段跳过档内增速插值（算力段增速期权≈0，重资产公用事业化定价）")
     elif args.tier == "tier3" and band == "g4":
         steps.append("tier3 g4 宽格跳过增速插值（15-50x 跨度已含增速定价，靠质量分定位上下沿）")
+    elif args.growth is None:
+        steps.append("增速未知，跳过档内增速插值（按 g1 保守取格）")
+    else:
+        lo, hi, note = growth_interpolate(args.growth, band, lo, hi)
+        steps.append(note)
 
     # 质量分调节
     # ⚠️ tier3 g4 独立规则（v1.13.4）：该格 15-50x 是「下沿自研/入口 vs 上沿收智慧租」的双锚结构，
@@ -173,10 +179,26 @@ def main():
         steps.append(f"质量分 {args.quality:.1f} → {'上沿' if args.quality>=8 else '中带' if args.quality>=6 else '下沿'} {q_lo:.1f}-{q_hi:.1f}x")
     lo, hi = q_lo, q_hi
 
-    # 修正系数
+    # 修正系数（v1.15.1：应用顺序固定，与命令行顺序无关——原实现按命令行顺序叠加，
+    #   founder80 先于 vertical1.5 得上限 120x、反序得 80x）
+    #   ① asset_light 换带：算力段轻资产 15-25x 是基准格切换，先换带再叠乘法修正，超限阈值随之按 25x 计
+    #      （原实现 asset_light 后仍按重资产格 10x×2 判超限，每次必触发告警）
+    #   ② 乘法类（vertical/china_sub/ai_narrative/margin_*）——可交换
+    #   ③ founder80 封顶：最后应用
+    CORR_FIRST, CORR_LAST = ("asset_light",), ("founder80",)
+    ordered = ([c for c in args.corr if c in CORR_FIRST]
+               + [c for c in args.corr if c not in CORR_FIRST and c not in CORR_LAST]
+               + [c for c in args.corr if c in CORR_LAST])
     corr_notes = []
-    for c in args.corr:
+    peak_hi = hi  # 修正链中出现过的最高上限（founder80 封顶前）——超限告警按它判，封顶不掩盖叠加过度
+    for c in ordered:
+        if c == "asset_light" and args.tier != "infra":
+            corr_notes.append("asset_light 仅算力段（--tier infra）有效，忽略")
+            continue
         lo, hi, note = apply_corr(lo, hi, c)
+        if c == "asset_light":
+            base_lo, base_hi = lo, hi
+        peak_hi = max(peak_hi, hi)
         corr_notes.append(note)
     if corr_notes:
         steps.append("修正叠加: " + " + ".join(corr_notes))
@@ -196,8 +218,8 @@ def main():
     # 超限告警：倍数上限超过档位格子的 2 倍（修正过度）
     max_sane = base_hi * 2.0
     warning = ""
-    if hi > max_sane:
-        warning = (f"\n⚠️ 超限告警: 倍数上限 {hi:.0f}x 超过档位格子上限（{base_hi:.0f}x）的 2 倍——"
+    if peak_hi > max_sane:
+        warning = (f"\n⚠️ 超限告警: 修正链中倍数上限达 {peak_hi:.0f}x，超过档位格子上限（{base_hi:.0f}x）的 2 倍——"
                    f"检查: ①档位判定是否过高 ②修正系数是否叠加过度 ③增速是否虚报。")
 
     # 锚点校准提示
@@ -211,7 +233,7 @@ def main():
 
     out = {
         "输入": {"ARR": f"${args.arr}M", "口径": arr_type_note, "档位": TIER_NAMES[args.tier],
-                 "增速": f"{args.growth*100:.0f}%", "质量分": args.quality, "修正": args.corr},
+                 "增速": growth_txt, "质量分": args.quality, "修正": args.corr},
         "推导": steps,
         "倍数": {"低": round(lo, 1), "中位": round((lo+hi)/2, 1), "高": round(hi, 1)},
         "估值": {"低": f"${val_lo:.0f}M", "中位": f"${val_mid:.0f}M", "高": f"${val_hi:.0f}M"},
@@ -228,7 +250,7 @@ def main():
     print("=" * 60)
     print(f"AI 应用公司估值 · {TIER_NAMES[args.tier]} · {arr_type_note}")
     print("=" * 60)
-    print(f"输入: ARR ${args.arr:.0f}M | 档位 {TIER_NAMES[args.tier]} | 增速 {args.growth*100:.0f}% | 质量分 {args.quality:.1f}")
+    print(f"输入: ARR ${args.arr:.0f}M | 档位 {TIER_NAMES[args.tier]} | 增速 {growth_txt} | 质量分 {args.quality:.1f}")
     print()
     for s in steps:
         print(f"→ {s}")

@@ -221,4 +221,4 @@ When analyzing companies with non-public data (BP, prospectus PDFs, internal not
 2. **De-identify customer names**: report client names only when already public (annual report/10-K); otherwise use 'Customer A in {industry}'
 3. **Mark non-public numbers**: unpublished financials must be marked 'internal, not for distribution'
 4. **No raw sensitive data in reports**: exclude unreleased revenue, internal costs, or personnel data from any published report
-5. **Source state disclosure**: every [N] source carries read-state (📖 read original / 📄 via citation / 🔗 unopened)
+5. **Source state disclosure**: every [N] source states its read-state in words (read original / via citation / unopened) — validate S6 rejects 📖-style emoji in reports
